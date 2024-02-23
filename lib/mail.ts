@@ -8,32 +8,39 @@ AWS.config.update({
 });
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
 const AWS_SES = new AWS.SES();
+const domain = process.env.NEXT_PUBLIC_APP_URL;
+
+export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
+  try {
+    await resend.emails.send({
+      from: "carlos@carlosgonzalez.info",
+      to: email,
+      subject: "@FA Code",
+      html: `<p>Your 2FA code: ${token}</p>`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const confirmLink = `http://localhost:3000/auth/new-password?token=${token}`;
+  const confirmLink = `${domain}/auth/new-password?token=${token}`;
 
   try {
-    const { data, error } = await resend.emails.send({
+    await resend.emails.send({
       from: "carlos@carlosgonzalez.info",
       to: email,
       subject: "Reset your password",
       html: `<p>Click <a href="${confirmLink}">here</a> to reset password</p>`,
     });
-
-    if (error) {
-      console.log("something went wrong", error);
-    }
-
-    return console.log("email sent", data);
   } catch (error) {
     console.log(error);
   }
 };
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const confirmLink = `http://localhost:3000/auth/new-verification?token=${token}`;
+  const confirmLink = `${domain}/auth/new-verification?token=${token}`;
 
   const sender = process.env.AWS_SES_SENDER;
 

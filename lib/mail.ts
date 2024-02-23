@@ -1,14 +1,5 @@
-import AWS from "aws-sdk";
 import { Resend } from "resend";
-
-AWS.config.update({
-  region: "us-east-2",
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-});
-
 const resend = new Resend(process.env.RESEND_API_KEY);
-const AWS_SES = new AWS.SES();
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
@@ -53,6 +44,16 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     console.log(error);
   }
 };
+
+// import AWS from "aws-sdk";
+
+// AWS.config.update({
+//   region: "us-east-2",
+//   accessKeyId: process.env.AWS_ACCESS_KEY,
+//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+// });
+
+// const AWS_SES = new AWS.SES();
 
 // export const sendVerificationEmail = async (email: string, token: string) => {
 //   const confirmLink = `${domain}/auth/new-verification?token=${token}`;
